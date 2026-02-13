@@ -7,7 +7,9 @@ import Square from "./Square";
  * @param {{ squares: (null|'X'|'O')[], onPlayAt: (index: number) => void, disabled?: boolean }} props
  * @returns {JSX.Element}
  */
-export default function Board({ squares, onPlayAt, disabled = false }) {
+export default function Board({ squares, onPlayAt, disabled = false, winningSquares = [] }) {
+  const winningSet = new Set(winningSquares);
+
   return (
     <div className="ttt-board" role="grid" aria-label="Tic Tac Toe board">
       {squares.map((value, idx) => (
@@ -16,6 +18,7 @@ export default function Board({ squares, onPlayAt, disabled = false }) {
             value={value}
             index={idx}
             disabled={disabled || value !== null}
+            isWinning={winningSet.has(idx)}
             onClick={() => onPlayAt(idx)}
           />
         </div>

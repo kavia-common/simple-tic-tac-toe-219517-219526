@@ -10,10 +10,21 @@
   --danger: #ef4444;
 
   --ring: rgba(59, 130, 246, 0.35);
-  --border: rgba(17, 24, 39, 0.12);
+  --ring-strong: rgba(59, 130, 246, 0.55);
 
-  --shadow: 0 10px 28px rgba(17, 24, 39, 0.08);
-  --shadow-sm: 0 2px 10px rgba(17, 24, 39, 0.08);
+  --border: rgba(17, 24, 39, 0.12);
+  --border-strong: rgba(17, 24, 39, 0.18);
+
+  --shadow: 0 16px 40px rgba(17, 24, 39, 0.08);
+  --shadow-sm: 0 6px 18px rgba(17, 24, 39, 0.10);
+
+  /* Retro/pixel-ish styling tokens */
+  --pixel-step: 2px;
+  --pixel-border: rgba(17, 24, 39, 0.20);
+  --pixel-border-hover: rgba(59, 130, 246, 0.55);
+  --square-bg: #ffffff;
+  --square-shadow: 0 1px 0 rgba(17, 24, 39, 0.10), 0 12px 0 rgba(17, 24, 39, 0.03);
+  --square-shadow-hover: 0 1px 0 rgba(17, 24, 39, 0.10), 0 16px 0 rgba(17, 24, 39, 0.03);
 }
 
 .App {
@@ -30,12 +41,12 @@
 }
 
 .ttt-card {
-  width: min(520px, 100%);
+  width: min(540px, 100%);
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 16px;
+  border-radius: 18px;
   box-shadow: var(--shadow);
-  padding: 22px 18px 18px;
+  padding: 24px 18px 18px;
 }
 
 .ttt-header {
@@ -47,9 +58,9 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-weight: 700;
+  font-weight: 800;
   font-size: 12px;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.10em;
   text-transform: uppercase;
   padding: 6px 10px;
   border-radius: 999px;
@@ -61,20 +72,22 @@
 
 .ttt-title {
   margin: 0;
-  font-size: 28px;
-  line-height: 1.15;
-  letter-spacing: -0.02em;
+  font-size: 30px;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  font-weight: 900;
 }
 
 .ttt-subtitle {
-  margin: 8px 0 0;
+  margin: 10px auto 0;
   color: var(--muted);
   font-size: 14px;
+  max-width: 46ch;
 }
 
 .ttt-statusRow {
   display: grid;
-  gap: 6px;
+  gap: 8px;
   text-align: center;
   margin: 14px 0 16px;
 }
@@ -83,7 +96,7 @@
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  font-weight: 800;
+  font-weight: 900;
   letter-spacing: 0.02em;
   padding: 10px 12px;
   border-radius: 12px;
@@ -109,6 +122,7 @@
   background: rgba(100, 116, 139, 0.08);
 }
 
+/* Compact status hint bar */
 .ttt-turnHint {
   font-size: 13px;
   color: var(--muted);
@@ -117,11 +131,12 @@
 .ttt-boardWrap {
   display: grid;
   place-items: center;
-  padding: 6px 0 10px;
+  padding: 8px 0 10px;
 }
 
+/* Centered, prominent 3x3 grid with consistent spacing */
 .ttt-board {
-  width: min(360px, 92vw);
+  width: min(380px, 92vw);
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 12px;
@@ -131,7 +146,7 @@
   display: contents;
 }
 
-/* Retro square: pixel-ish border + subtle shadow */
+/* Retro square: subtle "pixel-ish" border + soft shadow + clear hover/focus */
 .ttt-square {
   appearance: none;
   -webkit-appearance: none;
@@ -139,42 +154,80 @@
   aspect-ratio: 1 / 1;
 
   border-radius: 14px;
-  border: 2px solid rgba(17, 24, 39, 0.22);
-  background: #ffffff;
+  border: var(--pixel-step) solid var(--pixel-border);
+  background: var(--square-bg);
 
-  box-shadow: 0 1px 0 rgba(17, 24, 39, 0.10), 0 10px 0 rgba(17, 24, 39, 0.03);
+  box-shadow: var(--square-shadow);
   cursor: pointer;
 
   display: grid;
   place-items: center;
 
-  transition: transform 120ms ease, box-shadow 120ms ease, border-color 120ms ease;
+  transition: transform 140ms ease, box-shadow 140ms ease, border-color 140ms ease,
+    filter 140ms ease;
 }
 
 .ttt-square:hover:not(:disabled) {
   transform: translateY(-1px);
-  border-color: rgba(59, 130, 246, 0.55);
-  box-shadow: 0 1px 0 rgba(17, 24, 39, 0.10), 0 14px 0 rgba(17, 24, 39, 0.03);
+  border-color: var(--pixel-border-hover);
+  box-shadow: var(--square-shadow-hover);
 }
 
 .ttt-square:active:not(:disabled) {
   transform: translateY(0px);
+  filter: brightness(0.99);
 }
 
 .ttt-square:disabled {
   cursor: not-allowed;
-  opacity: 0.9;
+  opacity: 0.92;
 }
 
 .ttt-square:focus-visible {
-  outline: 3px solid var(--ring);
+  outline: 3px solid var(--ring-strong);
   outline-offset: 3px;
+}
+
+/* Winning squares: subtle border + glow pulse, reduced-motion friendly */
+.ttt-square--win {
+  border-color: rgba(6, 182, 212, 0.75);
+  box-shadow:
+    0 1px 0 rgba(17, 24, 39, 0.10),
+    0 12px 0 rgba(17, 24, 39, 0.03),
+    0 0 0 3px rgba(6, 182, 212, 0.20);
+}
+
+@keyframes tttWinPulse {
+  0% {
+    box-shadow:
+      0 1px 0 rgba(17, 24, 39, 0.10),
+      0 12px 0 rgba(17, 24, 39, 0.03),
+      0 0 0 3px rgba(6, 182, 212, 0.18);
+  }
+  50% {
+    box-shadow:
+      0 1px 0 rgba(17, 24, 39, 0.10),
+      0 12px 0 rgba(17, 24, 39, 0.03),
+      0 0 0 5px rgba(6, 182, 212, 0.28);
+  }
+  100% {
+    box-shadow:
+      0 1px 0 rgba(17, 24, 39, 0.10),
+      0 12px 0 rgba(17, 24, 39, 0.03),
+      0 0 0 3px rgba(6, 182, 212, 0.18);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .ttt-square--win {
+    animation: tttWinPulse 1100ms ease-in-out infinite;
+  }
 }
 
 /* Big, crisp mark */
 .ttt-squareValue {
   font-weight: 900;
-  font-size: clamp(40px, 7vw, 64px);
+  font-size: clamp(40px, 7vw, 66px);
   line-height: 1;
   letter-spacing: -0.04em;
   text-shadow: 0 1px 0 rgba(17, 24, 39, 0.12);
@@ -184,44 +237,47 @@
 .ttt-actions {
   display: flex;
   justify-content: center;
-  margin-top: 10px;
+  margin-top: 12px;
 }
 
+/* Reset button: primary accent, clear hover/active/focus */
 .ttt-resetBtn {
   appearance: none;
   -webkit-appearance: none;
 
-  border: 1px solid rgba(59, 130, 246, 0.35);
-  background: linear-gradient(180deg, rgba(59, 130, 246, 0.12), rgba(59, 130, 246, 0.06));
+  border: 1px solid rgba(59, 130, 246, 0.40);
+  background: linear-gradient(180deg, rgba(59, 130, 246, 0.14), rgba(59, 130, 246, 0.06));
   color: #1d4ed8;
 
   padding: 10px 16px;
   border-radius: 12px;
-  font-weight: 800;
+  font-weight: 900;
   letter-spacing: 0.01em;
 
   cursor: pointer;
   box-shadow: var(--shadow-sm);
-  transition: transform 120ms ease, box-shadow 120ms ease, border-color 120ms ease;
+  transition: transform 140ms ease, box-shadow 140ms ease, border-color 140ms ease, filter 140ms ease;
 }
 
 .ttt-resetBtn:hover {
   transform: translateY(-1px);
-  border-color: rgba(59, 130, 246, 0.55);
+  border-color: rgba(59, 130, 246, 0.65);
+  filter: saturate(1.05);
 }
 
 .ttt-resetBtn:active {
   transform: translateY(0);
-  box-shadow: 0 1px 6px rgba(17, 24, 39, 0.10);
+  box-shadow: 0 2px 10px rgba(17, 24, 39, 0.12);
+  filter: saturate(1);
 }
 
 .ttt-resetBtn:focus-visible {
-  outline: 3px solid var(--ring);
+  outline: 3px solid var(--ring-strong);
   outline-offset: 3px;
 }
 
 .ttt-footer {
-  width: min(520px, 100%);
+  width: min(540px, 100%);
   margin-top: 14px;
   text-align: center;
 }

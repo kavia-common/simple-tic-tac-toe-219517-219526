@@ -2,6 +2,10 @@
   color-scheme: light;
 }
 
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
 body {
   margin: 0;
   font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",

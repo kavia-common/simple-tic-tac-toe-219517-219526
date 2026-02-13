@@ -5,6 +5,20 @@ import { calculateWinner, isDraw } from "./utils/game";
 
 const EMPTY_BOARD = Array(9).fill(null);
 
+const WIN_LINES = [
+  // rows
+  [0, 1, 2],
+  [3, 4, 5],
+  [6, 7, 8],
+  // cols
+  [0, 3, 6],
+  [1, 4, 7],
+  [2, 5, 8],
+  // diagonals
+  [0, 4, 8],
+  [2, 4, 6],
+];
+
 /**
  * PUBLIC_INTERFACE
  * Main application entry for the Tic Tac Toe game.
@@ -19,10 +33,19 @@ function App() {
   const winner = useMemo(() => calculateWinner(squares), [squares]);
   const draw = useMemo(() => isDraw(squares), [squares]);
 
+  const winningSquares = useMemo(() => {
+    if (!winner) return [];
+    for (const [a, b, c] of WIN_LINES) {
+      const val = squares[a];
+      if (val && val === squares[b] && val === squares[c]) return [a, b, c];
+    }
+    return [];
+  }, [winner, squares]);
+
   const statusText = useMemo(() => {
     if (winner) return `Winner: ${winner}`;
     if (draw) return "Draw";
-    return `Player ${xIsNext ? "X" : "O"}`;
+    return `Turn: ${xIsNext ? "X" : "O"}`;
   }, [winner, draw, xIsNext]);
 
   const statusTone = winner ? "winner" : draw ? "draw" : "turn";
@@ -71,7 +94,12 @@ function App() {
           </div>
 
           <div className="ttt-boardWrap">
-            <Board squares={squares} onPlayAt={handlePlayAt} disabled={winner || draw} />
+            <Board
+              squares={squares}
+              onPlayAt={handlePlayAt}
+              disabled={winner || draw}
+              winningSquares={winningSquares}
+            />
           </div>
 
           <div className="ttt-actions">
